@@ -1,0 +1,66 @@
+import re
+
+# Ask the user to input a password to check its strength
+password = input("Enter a password to check the strength:")
+
+# Initialize the total score and feedback list for the password
+total = 0
+feedback = []
+
+# Check the length of the password
+if len(password) < 6:
+    # If the password is too short, add a feedback message
+    feedback.append("Password is too short. Minimum length of the password is 6 characters.")
+elif len(password) >= 9:
+    # If the password is 9 characters or longer, increment the total score
+    total += 1
+else:
+    # If the password is between 6 and 8 characters, add a feedback message
+    feedback.append("Password length is acceptable but less than suggested 9 characters.")
+
+# Check for lowercase alphabets in the password
+if re.search(r'[a-z]', password):
+    # If the password contains at least one lowercase alphabet, increment the total score
+    total += 1
+else:
+    # If the password does not contain any lowercase alphabets, add a feedback message
+    feedback.append("Password must contain at least one lowercase alphabet.")
+
+# Check for uppercase alphabets in the password
+if re.search(r'[A-Z]', password):
+    # If the password contains at least one uppercase alphabet, increment the total score
+    total += 1
+else:
+    # If the password does not contain any uppercase alphabets, add a feedback message
+    feedback.append("Password must contain at least one uppercase alphabet.")
+
+# Check for numbers in the password
+if re.search(r'\d', password):
+    # If the password contains at least one number, increment the total score
+    total += 1
+else:
+    # If the password does not contain any numbers, add a feedback message
+    feedback.append("Password must contain one numerical value.")
+
+# Check for special characters in the password
+if re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+    # If the password contains at least one special character, increment the total score
+    total += 1
+else:
+    # If the password does not contain any special characters, add a feedback message
+    feedback.append("Password must contain at least one special character.")
+
+# Assess the strength of the password based on the total score
+if total == 5:
+    strength = "Password is very strong."
+elif total >= 3:
+    strength = "Password is strong."
+elif total == 2:
+    strength = "Password is medium."
+else:
+    strength = "Password is weak."
+
+# Print the password strength and feedback messages
+print(f"Password strength: {strength}")
+for comment in feedback:
+    print(f"- {comment}")
