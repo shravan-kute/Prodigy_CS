@@ -1,0 +1,51 @@
+from pynput import keyboard
+import os
+
+# Notify the user and get their permission
+print("This tool will record your keystrokes and save them to a file.")
+print("Please make sure you have the necessary permissions to use this program.")
+consent = input("Do you agree to keystroke logging? (Yes/No): ").strip().lower()
+
+# Check if the user granted permission
+if consent != 'yes':
+    print("Permission not granted. Exiting the program.")
+    exit()
+
+# Set the file where keystrokes will be logged
+log_file = "keystrokes.txt"
+
+# Create the log file if it doesn't exist
+if not os.path.exists(log_file):
+    with open(log_file, "w") as f:
+        f.write("")  # Create an empty file
+
+# Define a function to handle key presses
+def on_press(key):
+    """
+    This function is called when a key is pressed.
+    It writes the character of the key to the log file.
+    If the key doesn't have a character (e.g. F1, Shift, etc.), it writes the key name instead.
+    """
+    try:
+        with open(log_file, "a") as f:
+            f.write(f"{key.char}")
+    except AttributeError:
+        with open(log_file, "a") as f:
+            f.write(f" {key} ")
+
+# Define a function to handle key releases
+def on_release(key):
+    """
+    This function is called when a key is released.
+    If the Esc key is released, it stops the keylogger.
+    """
+    if key == keyboard.Key.esc:
+        print("Keylogging stopped.")
+        return False
+
+# Notify the user that keylogging is active
+print("Keylogging is now active. Press 'Esc' to stop.")
+
+# Start the keylogger
+with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+    listener.join()
