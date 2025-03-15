@@ -1,0 +1,69 @@
+from PIL import Image
+
+# Define a function to encrypt an image
+def encrypt_image(image):
+    # Convert the image to RGB mode to ensure consistent pixel manipulation
+    image = image.convert('RGB')
+    
+    # Get the pixel data from the image
+    pixels = image.load()
+    
+    # Encrypt the image by adding a constant value to each pixel
+    for x in range(image.width):
+        for y in range(image.height):
+            # Get the current RGB values of the pixel
+            r, g, b = pixels[x, y]
+            
+            # Add 100 to each pixel value, wrapping around to 0 if the result exceeds 255
+            pixels[x, y] = ((r + 100) % 256, (g + 100) % 256, (b + 100) % 256)
+            
+    # Return the encrypted image
+    return image
+
+# Define a function to decrypt an image
+def decrypt_image(image):
+    # Convert the image to RGB mode to ensure consistent pixel manipulation
+    image = image.convert('RGB')
+    
+    # Get the pixel data from the image
+    pixels = image.load()
+    
+    # Decrypt the image by subtracting the same constant value from each pixel
+    for x in range(image.width):
+        for y in range(image.height):
+            # Get the current RGB values of the pixel
+            r, g, b = pixels[x, y]
+            
+            # Subtract 100 from each pixel value, wrapping around to 255 if the result is negative
+            pixels[x, y] = ((r - 100) % 256, (g - 50) % 256, (b - 50) % 256)
+            
+    # Return the decrypted image
+    return image
+
+# Ask the user if they want to encrypt or decrypt an image
+user_choice = input("Would you like to encrypt or decrypt the image? Type 'encrypt' or 'decrypt': ").lower()
+
+# Set the input image path
+input_image_path = 'input.png'  # Assuming the input image is named input.png
+
+# Open the input image
+input_image = Image.open(input_image_path)
+
+# Determine the output image path and action based on the user's choice
+if user_choice == 'encrypt':
+    output_image_path = 'encrypted_image.png'
+    output_image = encrypt_image(input_image)
+    action = 'encrypted'
+elif user_choice == 'decrypt':
+    output_image_path = 'decrypted_image.png'
+    output_image = decrypt_image(input_image)
+    action = 'decrypted'
+else:
+    print("Invalid choice. Please choose 'encrypt' or 'decrypt'.")
+    exit()
+
+# Save the output image
+output_image.save(output_image_path)
+
+# Print a success message
+print(f"The image has been {action}! You can find it saved as '{output_image_path}'.")
